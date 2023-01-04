@@ -1,0 +1,31 @@
+import tkinter as tk
+from youtube_dl import YoutubeDL
+
+class YoutubeDownloader(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title('Youtube Downloader')
+
+        url_input = tk.Entry(self)
+        url_input.grid(row=0, column=0)
+
+        download_btn = tk.Button(self, text='Download', command=self.download)
+        download_btn.grid(row=0, column=1)
+
+    def download(self):
+        url = url_input.get(0)
+
+        self.download_video(url)
+
+    def download_video(self, url):
+        info = YoutubeDL().extract_info(url=url, download=False)
+        out_file_path = '{video_title}.mp3'.format(video_title=info['title'])
+
+        options = {
+          'format': 'bestaudio/best',
+          'keepvideo': False,
+          'outtmpl': out_file_path
+        }
+
+        with YoutubeDL(options) as downloader:
+            downloader.downlad([info['webpage_url']])
